@@ -1,10 +1,12 @@
 const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 const express = require("express");
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/login", async (req, res) => {
   // validate user
   const { error } = validate(req.body);
   if (error) {
@@ -22,8 +24,31 @@ router.post("/", async (req, res) => {
     return res.status(400).send("Invalid email or password.");
   }
 
-  const token = user.generateAuthToken();
-  res.send(token);
+  // const { accessToken, refreshToken } = user.generateAuthToken();
+
+  const accessToken = jwt.sign(
+    { _id: user._id, isAdmin: user.isAdmin },
+    config.get("jwtPrivateAccessKey"),
+    { expiresIn: "1m" }
+  );
+
+  const refreshToken = jwt.sign(
+    { _id: user._id },
+    config.get("jwtPrivateRefreshKey"),
+    { expiresIn: "24h" }
+  );
+
+  res
+    .header({ "X-Access-Token": accessToken, "X-Refresh-Token": refreshToken })
+    .send({ accessToken, refreshToken });
+  // res.send(`X-Authorization: Bearer ${token}`);
+  // res.send({ "X-Authorization": "Bearer " + token });
+});
+
+router.get("/logout", async (req, res) => {
+  res
+    .header({ "X-Access-Token": "", "X-Refresh-Token": "" })
+    .send("Logged out.");
 });
 
 function validate(req) {

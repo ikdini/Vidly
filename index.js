@@ -12,8 +12,13 @@ const auth = require("./routes/auth");
 const express = require("express");
 const app = express();
 
-if (!config.get("jwtPrivateKey")) {
-  console.error("FATAL ERROR: jwtPrivateKey is not defined.");
+if (!config.get("jwtPrivateAccessKey")) {
+  console.error("FATAL ERROR: jwtPrivateAccessKey is not defined.");
+  process.exit(1);
+}
+
+if (!config.get("jwtPrivateRefreshKey")) {
+  console.error("FATAL ERROR: jwtPrivateRefreshKey is not defined.");
   process.exit(1);
 }
 

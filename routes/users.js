@@ -5,7 +5,7 @@ const _ = require("lodash");
 const express = require("express");
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/signup", async (req, res) => {
   // validate user
   const { error } = validateUser(req.body);
   if (error) {
@@ -19,14 +19,14 @@ router.post("/", async (req, res) => {
   }
 
   // create user
-  user = new User(_.pick(req.body, ["name", "email", "password"]));
+  user = new User(_.pick(req.body, ["name", "email", "password", "isAdmin"]));
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
 
-  const token = user.generateAuthToken();
+  // const { accessToken, refreshToken } = user.generateAuthToken();
   res
-    .header("x-auth-token", token)
+    // .header({ "X-Access-Token": accessToken, "X-Refresh-Token": refreshToken })
     .send(_.pick(user, ["_id", "name", "email"]));
 
   // res.send({

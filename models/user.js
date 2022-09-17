@@ -28,11 +28,18 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateAuthToken = function () {
-  const token = jwt.sign(
+  const accessToken = jwt.sign(
     { _id: this._id, isAdmin: this.isAdmin },
-    config.get("jwtPrivateKey")
+    config.get("jwtPrivateAccessKey"),
+    { expiresIn: "1m" }
   );
-  return token;
+
+  const refreshToken = jwt.sign(
+    { _id: this._id, isAdmin: this.isAdmin },
+    config.get("jwtPrivateRefreshKey"),
+    { expiresIn: "24h" }
+  );
+  return { accessToken, refreshToken };
 };
 
 const User = mongoose.model("User", userSchema);
@@ -43,6 +50,7 @@ function validateUser(user) {
     name: Joi.string().min(3).max(50).required(),
     email: Joi.string().required().min(5).max(250).email(),
     password: Joi.string().min(5).max(250).required(),
+    isAdmin: Joi.boolean(),
   });
   return schema.validate(user);
 }
