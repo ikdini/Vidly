@@ -1,4 +1,5 @@
 {
   "jwtPrivateAccessKey": "vidly_jwtPrivateAccessKey",
-  "jwtPrivateRefreshKey": "vidly_jwtPrivateRefreshKey"
+  "jwtPrivateRefreshKey": "vidly_jwtPrivateRefreshKey",
+  "jwtPrivateKey": "vidly_jwtPrivateKey"
 }

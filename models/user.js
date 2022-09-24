@@ -28,18 +28,24 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateAuthToken = function () {
-  const accessToken = jwt.sign(
-    { _id: this._id, isAdmin: this.isAdmin },
-    config.get("jwtPrivateAccessKey"),
-    { expiresIn: "1m" }
-  );
+  // const accessToken = jwt.sign(
+  //   { _id: this._id, isAdmin: this.isAdmin },
+  //   config.get("jwtPrivateAccessKey"),
+  //   { expiresIn: "1m" }
+  // );
 
-  const refreshToken = jwt.sign(
+  // const refreshToken = jwt.sign(
+  //   { _id: this._id, isAdmin: this.isAdmin },
+  //   config.get("jwtPrivateRefreshKey"),
+  //   { expiresIn: "24h" }
+  // );
+  // return { accessToken, refreshToken };
+
+  const token = jwt.sign(
     { _id: this._id, isAdmin: this.isAdmin },
-    config.get("jwtPrivateRefreshKey"),
-    { expiresIn: "24h" }
+    config.get("jwtPrivateKey")
   );
-  return { accessToken, refreshToken };
+  return token;
 };
 
 const User = mongoose.model("User", userSchema);
