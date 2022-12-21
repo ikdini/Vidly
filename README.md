@@ -1,2 +1,2 @@
 # Vidly
-Project used to learn node
+A movie rental API 
