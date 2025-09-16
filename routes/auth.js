@@ -29,13 +29,13 @@ router.post("/login", async (req, res) => {
   const accessToken = jwt.sign(
     { _id: user._id, isAdmin: user.isAdmin },
     config.get("jwtPrivateAccessKey"),
-    { expiresIn: "1m" }
+    { expiresIn: "1m", algorithm: "HS256" }
   );
 
   const refreshToken = jwt.sign(
     { _id: user._id },
     config.get("jwtPrivateRefreshKey"),
-    { expiresIn: "24h" }
+    { expiresIn: "24h", algorithm: "HS256" }
   );
 
   res

@@ -1,6 +1,6 @@
 {
   "jwtPrivateAccessKey": "",
   "jwtPrivateRefreshKey": "",
-  "jwtPrivateKey": "",
+  "jwtPrivateKey": "your-secure-secret-key",
   "db": "mongodb://localhost/vidly"
 }
